@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>7</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>413</x>
+      <y>294</y>
+      <w>280</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>ItemPlacementSystem : ISystem
+-
+[UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
+[UpdateBefore(typeof(PhysicsSystemGroup))]
+-
++ ecb=BeginInitializationEntityCommandBufferSystem</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>413</x>
+      <y>497</y>
+      <w>280</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>AdjustChildWithPhysicsBodySystem : ISystem
+-
+[UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
+[UpdateBefore(typeof(PhysicsSystemGroup))]
+[UpdateAfter(typeof(ItemPlacementSystem))]
+-
++ ecb=EndSimulationEntityCommandBufferSystem</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>686</x>
+      <y>322</y>
+      <w>133</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>170.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>686</x>
+      <y>525</y>
+      <w>133</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>170.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>805</x>
+      <y>280</y>
+      <w>189</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>PlaceItemJob : IJobEntity
+-
+ref DynamicBuffer&lt;ItemPlacementInput&gt;
+in DynamicBuffer&lt;ItemPrefabEntitiesBuffer&gt;
+-
+- ECB.Instantiate(newItem)
+- ECB.SetComponent(newItem, new ItemMaterialColor)
+- ECB.AddComponent(newItem, new AppendingColorEntity)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Text</id>
+    <coordinates>
+      <x>721</x>
+      <y>315</y>
+      <w>70</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>.Schedule()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>805</x>
+      <y>511</y>
+      <w>315</w>
+      <h>105</h>
+    </coordinates>
+    <panel_attributes>AdjustChildWithPhysicsBodyJob : IJobEntity
+-
+in LocalTransform
+in ChildWithPhysicsBodyComponent
+in DynamicBuffer&lt;LinkedEntityGroup&gt;
+-
+-ECB.SetComponent(child, newTrans)
+-ECB.RemoveComponent&lt;ChildWithPhysicsBodyComponent&gt;(parent)
+-ECB.SetEnabled(child, true)
+-ECB.SetEnabled([child+1], true)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Text</id>
+    <coordinates>
+      <x>700</x>
+      <y>518</y>
+      <w>91</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>.ScheduleParallel()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>413</x>
+      <y>385</y>
+      <w>280</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>AppendingColorSystem : ISystem : ISystem
+-
+[UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
+[UpdateBefore(typeof(PhysicsSystemGroup))]
+[UpdateAfter(typeof(ItemPlacementSystem))]
+-
++ ecb=BeginSimulationEntityCommandBufferSystem</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>805</x>
+      <y>399</y>
+      <w>329</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>AppendColorJob : IJobEntity
+-
+in AppendingColorEntity
+in DynamicBuffer&lt;LinkedEntityGroup&gt;
+-
+-ECB.AddComponent(child, new ItemMaterialColor)
+-ECB.RemoveComponent&lt;AppendingColorEntity&gt;(groupBuffer[0].Value)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Text</id>
+    <coordinates>
+      <x>700</x>
+      <y>406</y>
+      <w>91</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>.ScheduleParallel()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>686</x>
+      <y>413</y>
+      <w>133</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>170.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>413</x>
+      <y>658</y>
+      <w>280</w>
+      <h>147</h>
+    </coordinates>
+    <panel_attributes>CursorItemFollowingSystem : SystemBase
+-
+[UpdateInGroup(typeof(PhysicsSystemGroup))]
+-
+OnUpdate()
++ ecb=BeginFixedStepSimulationEntityCommandBufferSystem
+#UpdateCursorItemColor(ecb)
+#UpdateCursorItemType(ecb)
+#CursorItemFollowMethod(ecb, ref CollisionWorld)
+ *OnRotateCursorItem(rotation)
+ *ecb.SetComponent(entity, FromPositionRotation)
+#OnRemoveItem(ecb, ref CollisionWorld)
+OnPlaceItem(InputAction)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>413</x>
+      <y>91</y>
+      <w>322</w>
+      <h>105</h>
+    </coordinates>
+    <panel_attributes>InitialCursorItemSystem : SystemBase
+-
+[UpdateInGroup(typeof(InitializationSystemGroup), OrderLast = true)]
+-
+OnUpdate()
++ ecb=EndInitializationEntityCommandBufferSystem
+#foreach(CursorItemPrefabsBuffer)
+ *ecb.Instantiate()
+ *ecb.AppendToBuffer(containerEntity, new CursorItemContainerBuffer)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>364</x>
+      <y>259</y>
+      <w>917</w>
+      <h>588</h>
+    </coordinates>
+    <panel_attributes>FixedStepSimulationSystemGroup
+--
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>378</x>
+      <y>630</y>
+      <w>889</w>
+      <h>203</h>
+    </coordinates>
+    <panel_attributes>PhysicsSystemGroup
+--
+bg=CYAN</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>364</x>
+      <y>63</y>
+      <w>917</w>
+      <h>189</h>
+    </coordinates>
+    <panel_attributes>InitializationSystemGroup
+--
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
